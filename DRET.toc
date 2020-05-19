@@ -1,0 +1,7 @@
+## Interface: 11303
+## Title: Defiance Recruitment Tools
+## Notes: Defiance Recruitment Tools - Guild recruitment add-on for World of Warcraft Classic guild <Defiance> on Razorgore EU
+## Author: Wromthrax
+## Version: 0.0.1
+
+DRET.lua
