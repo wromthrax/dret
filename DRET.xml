@@ -1,0 +1,210 @@
+<Ui
+	xmlns="http://www.blizzard.com/wow/ui/"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.blizzard.com/wow/ui/..\FrameXML\UI.xsd">
+	<Script file="DRET.lua" />
+	<Frame name="DRET_FrameMessageTemplate" virtual="true">
+		<Size y="75" />
+		<Anchors>
+			<Anchor point="TOPLEFT" />
+			<Anchor point="TOPRIGHT" />
+		</Anchors>
+		<Layers>
+			<Layer level="BACKGROUND">
+				<Texture name="$parentBackgroundTexture" parentKey="BackgroundTexture" setAllPoints="true" alphaMode="ADD">
+					<Color a="0.1" r="1" g="1" b="1" />
+				</Texture>
+			</Layer>
+			<Layer level="BACKGROUND">
+				<FontString name="$parentTextContent" parentKey="TextContent" inherits="ChatFontNormal" justifyH="LEFT" justifyV="TOP">
+					<Size y="40" />
+					<Anchors>
+						<Anchor point="TOPLEFT">
+							<Offset x="10" y="-10" />
+						</Anchor>
+						<Anchor point="TOPRIGHT">
+							<Offset x="-10" y="-10" />
+						</Anchor>
+					</Anchors>
+				</FontString>
+			</Layer>
+		</Layers>
+		<Frames>
+			<Button name="$parentButtonDisable" parentKey="ButtonDisable" inherits="UIPanelButtonTemplate" text="Disable">
+				<Anchors>
+					<Anchor point="TOPLEFT">
+						<Offset x="10" y="-45" />
+					</Anchor>
+				</Anchors>
+				<Size x="100" y="20" />
+			</Button>
+			<Button name="$parentButtonEdit" parentKey="ButtonEdit" inherits="UIPanelButtonTemplate" text="Edit">
+				<Anchors>
+					<Anchor point="TOPLEFT">
+						<Offset x="120" y="-45" />
+					</Anchor>
+				</Anchors>
+				<Size x="100" y="20" />
+			</Button>
+			<Button name="$parentButtonDelete" parentKey="ButtonDelete" inherits="UIPanelButtonTemplate" text="Delete">
+				<Anchors>
+					<Anchor point="TOPRIGHT">
+						<Offset x="-10" y="-45" />
+					</Anchor>
+				</Anchors>
+				<Size x="100" y="20" />
+			</Button>
+		</Frames>
+	</Frame>
+	<Frame
+		name="DRET_Frame"
+		parent="UIParent"
+		hidden="true"
+		enableMouse="true"
+		toplevel="true"
+		clampedToScreen="true"
+	>
+		<Size x="640" y="480" />
+		<Anchors>
+			<Anchor point="CENTER" />
+		</Anchors>
+		<Backdrop
+			bgFile="Interface\DialogFrame\UI-DialogBox-Background"
+			edgeFile="Interface\DialogFrame\UI-DialogBox-Border"
+			tile="true"
+		>
+			<BackgroundInsets>
+				<AbsInset left="5" right="5" top="5" bottom="5" />
+			</BackgroundInsets>
+			<TileSize>
+				<AbsValue val="32" />
+			</TileSize>
+			<EdgeSize>
+				<AbsValue val="16" />
+			</EdgeSize>
+		</Backdrop>
+		<Layers>
+			<Layer level="BACKGROUND">
+				<FontString name="$parentTitle" inherits="GameFontNormal" text="Defiance Recruitment Tools" justifyH="LEFT" justifyV="TOP">
+					<Size x="300" y="20" />
+					<Anchors>
+						<Anchor point="TOPLEFT">
+							<Offset x="20" y="-20" />
+						</Anchor>
+					</Anchors>
+				</FontString>
+			</Layer>
+		</Layers>
+		<Frames>
+			<Button inherits="UIPanelCloseButtonNoScripts">
+				<Anchors>
+					<Anchor point="TOPRIGHT">
+						<Offset x="-10" y="-10" />
+					</Anchor>
+				</Anchors>
+				<Scripts>
+					<OnClick>
+						DRET_Frame:Hide()
+					</OnClick>
+				</Scripts>
+			</Button>
+			<Frame name="$parentTop">
+				<Size x="640" y="340" />
+				<Anchors>
+					<Anchor point="TOPLEFT">
+						<Offset y="-50" />
+					</Anchor>
+				</Anchors>
+				<Frames>
+					<ScrollFrame inherits="UIPanelScrollFrameTemplate">
+						<Anchors>
+							<Anchor point="TOPLEFT">
+								<Offset x="20" />
+							</Anchor>
+							<Anchor point="BOTTOMRIGHT">
+								<Offset x="-40" y="" />
+							</Anchor>
+						</Anchors>
+						<ScrollChild>
+							<Frame name="$parentScrollContent">
+								<Size x="580" y="0" />
+								<Frames />
+							</Frame>
+						</ScrollChild>
+					</ScrollFrame>
+				</Frames>
+			</Frame>
+			<Frame name="$parentBottom">
+				<Size x="640" y="90" />
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="$parentTop" relativePoint="BOTTOMLEFT" />
+				</Anchors>
+				<Frames>
+					<EditBox name="$parentEditBox" inherits="InputBoxTemplate" autoFocus="false">
+						<Size y="20" />
+						<Anchors>
+							<Anchor point="TOPLEFT">
+								<Offset x="25" y="-20" />
+							</Anchor>
+							<Anchor point="TOPRIGHT">
+								<Offset x="-20" y="-20" />
+							</Anchor>
+						</Anchors>
+						<Scripts>
+							<OnEscapePressed>
+								DRET.HandleButtonClick("cancel")
+							</OnEscapePressed>
+						</Scripts>
+					</EditBox>
+					<Button name="$parentButtonNew" inherits="UIPanelButtonTemplate" text="New">
+						<Anchors>
+							<Anchor point="TOPLEFT" relativeTo="$parentEditBox" relativePoint="BOTTOMLEFT">
+								<Offset x="-5" y="-10" />
+							</Anchor>
+						</Anchors>
+						<Size x="100" y="20" />
+						<Scripts>
+							<OnClick>
+								DRET.HandleButtonClick("new")
+							</OnClick>
+						</Scripts>
+					</Button>
+					<Button name="$parentButtonCancel" inherits="UIPanelButtonTemplate" text="Cancel">
+						<Anchors>
+							<Anchor point="TOPRIGHT" relativeTo="$parentEditBox" relativePoint="BOTTOMRIGHT">
+								<Offset x="-120" y="-10" />
+							</Anchor>
+						</Anchors>
+						<Size x="100" y="20" />
+						<Scripts>
+							<OnClick>
+								DRET.HandleButtonClick("cancel")
+							</OnClick>
+						</Scripts>
+					</Button>
+					<Button name="$parentButtonSave" inherits="UIPanelButtonTemplate" text="Save">
+						<Anchors>
+							<Anchor point="TOPRIGHT" relativeTo="$parentEditBox" relativePoint="BOTTOMRIGHT">
+								<Offset x="0" y="-10" />
+							</Anchor>
+						</Anchors>
+						<Size x="100" y="20" />
+						<Scripts>
+							<OnClick>
+								DRET.HandleButtonClick("save")
+							</OnClick>
+						</Scripts>
+					</Button>
+				</Frames>			
+			</Frame>
+		</Frames>
+		<Scripts>
+			<OnLoad>
+				DRET.OnLoad(self)
+			</OnLoad>
+			<OnEvent>
+				DRET.HandleEvent(self, event, ...)
+			</OnEvent>
+		</Scripts>
+	</Frame>
+</Ui>
