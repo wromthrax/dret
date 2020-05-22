@@ -11,6 +11,7 @@ DRET_LOADED = false
 -- Locals
 local frameCount = 0
 local currentlyEditing = nil
+local debugMode = false
 
 function DRET.OnLoad(self)
 	self:RegisterEvent("ADDON_LOADED")
@@ -265,13 +266,32 @@ function SlashCmdList.DRET(msg)
 		elseif cmd == "spam" then
 			local available = 0
 			local disabled = 0
+			local inError = 0
 
 			for i = 1, #DRET_MESSAGES do
 				if DRET_MESSAGES[i].enabled then
-					available = available + 1
+					if string.len(DRET_MESSAGES[i].message) > 255 then
+						if debugMode then
+							print("Message with index " .. i .. " is longer than 255 characters and will be discarded.")
+						end
+
+						inError = inError + 1
+					else
+						available = available + 1
+					end
 				else
 					disabled = disabled + 1
 				end
+			end
+
+			if debugMode then
+				local _indexes = ""
+
+				for _i, _message in ipairs(DRET_MESSAGES) do
+					_indexes = _indexes .. " " .. _i
+				end
+
+				print("Total messages: " .. #DRET_MESSAGES .. " (" .. available .. " available, " .. disabled .. " disabled and " .. inError .. " in error), indexes:" .. _indexes)
 			end
 
 			if available > 0 then
@@ -280,7 +300,17 @@ function SlashCmdList.DRET(msg)
 				if args ~= "" and channel then
 					-- Pick a random message out of a pool of messages that are enabled and not sent in this cycle
 					-- If number of messages sent and number of total messages (available to send?) is same restart cycle
-					if #DRET_SENT - disabled == available - disabled then
+					if debugMode then
+						local _sentIndexes = ""
+
+						for _i, _index in ipairs(DRET_SENT) do
+							_sentIndexes = _sentIndexes .. " " .. _index
+						end
+
+						print("Total sent: " .. #DRET_SENT .. ", sent indexes:" .. _sentIndexes)
+					end
+
+					if (#DRET_SENT - disabled - inError) >= (available - disabled - inError) then
 						DRET.ResetMessageCycle()
 					end
 
@@ -298,13 +328,27 @@ function SlashCmdList.DRET(msg)
 							end
 						end
 
-						if message.enabled and not sent then
+						if message.enabled and not sent and string.len(message.message) <= 255 then
 							table.insert(indexes, i)
 						end
 					end
 
+					if debugMode then
+						local _toSendIndexes = ""
+
+						for _i, _index in ipairs(indexes) do
+							_toSendIndexes = _toSendIndexes .. " " .. _index
+						end
+
+						print("Total messages to choose from: " .. #indexes .. ", indexes:" .. _toSendIndexes)
+					end
+
 					-- Pick random and send
 					local randomIndex = math.random(1, #indexes)
+
+					if debugMode then
+						print("Random index: " .. randomIndex .. " (corresponding to message index " .. indexes[randomIndex] .. ")")
+					end
 
 					-- Send
 					SendChatMessage(DRET_MESSAGES[indexes[randomIndex]].message, "CHANNEL", nil, tonumber(channel));
@@ -332,6 +376,10 @@ function SlashCmdList.DRET(msg)
 			else
 				print("|cffff0000Defiance Recruitment Tools|r |cff999999ERROR:|r Nothign to remove.")
 			end
+		elseif cmd == "debug" then
+			debugMode = not debugMode
+
+			print("|cffff0000Defiance Recruitment Tools|r |cff999999INFO:|r Debug mode is now: " .. tostring(debugMode))
 		else
 			print("|cffff0000Defiance Recruitment Tools|r usage:")
 			print("/dret show: |cff999999Show DRET")
@@ -339,6 +387,7 @@ function SlashCmdList.DRET(msg)
 			print("/dret spam <channel>: |cff999999Sends random message to channel")
 			print("/dret reset: |cff999999Reset sent messages cycle")
 			print("/dret destroy: |cff999999Deletes all messages (use with caution)")
+			print("/dret debug: |cff999999Toggle debug mode on/off")
 		end
 	end
 end

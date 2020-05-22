@@ -140,7 +140,7 @@
 					<Anchor point="TOPLEFT" relativeTo="$parentTop" relativePoint="BOTTOMLEFT" />
 				</Anchors>
 				<Frames>
-					<EditBox name="$parentEditBox" inherits="InputBoxTemplate" autoFocus="false">
+					<EditBox name="$parentEditBox" inherits="InputBoxTemplate" autoFocus="false" letters="255">
 						<Size y="20" />
 						<Anchors>
 							<Anchor point="TOPLEFT">
