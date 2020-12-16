@@ -6,7 +6,7 @@ Defiance Recruitment Tools - Guild recruitment add-on for World of Warcraft Clas
 
 0.2.0
  * Added debug mode
- * Minor fixers
+ * Minor fixes
 
 0.1.1
  * Minor fixes
